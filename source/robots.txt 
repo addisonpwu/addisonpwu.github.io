@@ -12,5 +12,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: https://run-rm-rf.github.io//sitemap.xml
-Sitemap:https://run-rm-rf.github.io//baidusitemap.xml
+Sitemap: https://run-rm-rf.github.io/sitemap.xml
+Sitemap:https://run-rm-rf.github.io/baidusitemap.xml
