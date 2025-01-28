@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "hexo": "^7.3.0",
+    "hexo-asset-path": "^1.0.4",
     "hexo-butterfly-envelope": "^1.0.15",
     "hexo-cli": "^4.3.2",
     "hexo-generator-archive": "^2.0.0",
