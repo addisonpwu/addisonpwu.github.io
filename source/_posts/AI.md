@@ -6,37 +6,111 @@ categories: AI
 tags: [DeepSeek]
 
 ---
+# 在本地部署 DeepSeek R1：使用 Ollama 的完整指南  
 
-# DeepSeek-R1成功原因探析
+## 引言  
+DeepSeek R1 的發佈標誌著開源大語言模型領域的一次重大突破。其性能不僅媲美 OpenAI 的付費模型 o1，還能通過本地部署實現數據隱私與算力自主控制。本文將結合最新實踐，詳解如何通過 Ollama 部署 DeepSeek R1，並深度解析其技術特性與衍生模型（如 R1 Zero）的核心差異。
 
-在人工智慧領域，DeepSeek-R1的橫空出世引起廣泛關注，其成功背後有著多種值得探討的原因。
+---
 
-## 技術創新與突破
+## 什麼是 DeepSeek R1？  
+DeepSeek R1 是由中國 AI 初創公司深度求索（DeepSeek）開發的推理優化模型，基於自研的 DeepSeek-V3 架構，通過**兩階段強化學習（RL）**實現突破性性能：  
+1. **純 RL 預訓練**：無需監督數據，僅通過基於規則的獎勵系統（如答案準確性和邏輯鏈完整性）驅動模型自我進化。  
+2. **監督微調（SFT）+ RLHF**：引入長思維鏈（CoT）數據穩定模型輸出，並通過人類反饋強化學習提升安全性與實用性。  
 
-DeepSeek-R1在技術上實現顯著的創新。它在後訓練階段大規模使用強化學習技術，這使得即便在標注數據極為有限的情況下，模型的推理能力也能得到大幅提升。例如，DeepSeek-R1-Zero通過純強化學習訓練，無需人工標注的監督數據，就能自主挖掘模型的推理潛力，這在業內是相当具有突破性的嘗試，為人工智慧的發展提供了一種新的思路。
+其核心優勢包括：  
+- **開源免費**：完整代碼與權重公開，支持商業用途。  
+- **參數靈活性**：提供 1.5B 至 671B 的蒸餾版本，適配從個人筆記本到企業級服務器的硬件。  
+- **推理專精**：在數學證明（如拉格朗日中值定理推導）、代碼生成等任務中表現卓越，AIME 2024 數學基準得分超越 OpenAI-o1。  
 
-此外，DeepSeek-R1還采用全新的優化設計，其在注意力機制和位置編碼技術上的改進，顯著提升模型處理長文本的能力，讓模型能更好地理解文本的上下文。
+---
 
-## 開源策略與社區共建
+## 使用 Ollama 部署 DeepSeek R1 的實戰步驟  
 
-DeepSeek團隊選擇開源DeepSeek-R1，這對其成功起到重要的推動作用。開源使得更多的研究者和開發者能夠接觸到這一先進的技術，加速學術研究的進程，也讓企業可以低成本地部署高性能的推理模型。這種開放的合作方式，吸引全球的技術社區共同參與到DeepSeek-R1的開發和應用中，形成良好的生態系統，為模型的不斷優化和完善提供強大的支持。
+### 1. 環境準備與 Ollama 安裝  
+- **硬件要求**：  
+  | 模型版本 | 最低顯存 | 推薦 GPU |  
+  |----------|----------|----------|  
+  | 1.5B     | 4GB      | RTX 3050 |  
+  | 7B/8B    | 6-10GB   | RTX 3060 |  
+  | 14B      | 12GB+    | RTX 3090 |  
+  | 32B+     | 24GB+    | A100/H100|   
 
-## 強大的性能表現
+- **安裝 Ollama**：  
+  - **Windows/macOS**：訪問 [Ollama 官網](https://ollama.com) 下載安裝包，默認路徑需預留 ≥12GB 磁盤空間（建議 C 盤）。  
+  - **Linux**：命令行一鍵安裝：  
+    ```bash  
+    curl -fsSL https://ollama.com/install.sh | sh  
+    ```  
+  - 驗證安裝：  
+    ```bash  
+    ollama --version  # 輸出版本號即成功  
+    ```  
 
-DeepSeek-R1在多個任務上的出色表現，也是其成功的重要因素之一。在數學任務上，DeepSeek-R1在AIME 2024上獲得79.8%的pass@1得分，略微超過OpenAI-o1-1217。在程式設計任務中，它在Codeforces上獲得2,029 Elo評級，超過96.3%的人類參賽者。這些數據充分展示出DeepSeek-R1在推理和解決複雜問題上的強大能力，使其在眾多模型中脫穎而出，獲得用戶和業界的認可。
+### 2. 模型下載與版本選擇  
+可在這https://ollama.com/search捜尋更多模型，如deepseek-r1:1.5b、deepseek-r1:7b...
 
-## 低成本與高效能
+通過 Ollama 拉取模型時需**顯式指定版本**（默認下載 7B）：  
+```bash  
+# 示例：下載 8B 版本（適合 10GB 顯存）  
+ollama run deepseek-r1:8b  
+```  
+若下載中斷，可重複執行命令觸發斷點續傳。  
 
-DeepSeek-R1憑藉其低成本和高性能的特性，滿足市面上企業和開發者對高性價比解決方案的需求。相比一些其他高性能的模型，DeepSeek-R1在訓練和部署過程中，能夠以更低的成本實現相近甚至更好的性能，這使得更多的企業和個人有機會應用這一技術，進一步推動其普及和發展。
-<!-- ![](2024/01/27/AI/image.png) -->
+### 3. 部署驗證與基礎交互  
+啟動模型後，可通過命令行直接測試：  
+```bash  
+ollama run deepseek-r1:8b  
+>>> 使用羅爾定理證明拉格朗日中值定理  
 
-## 用戶體驗與應用場景
+# Windows的环境变量监听
+OLLAMA_HOST  0.0.0.0
 
-DeepSeek-R1的界面設計直觀易用，功能強大，使得普通用戶也能輕松上手。而且它不僅限於聊天機器人，還被應用於金融分析、內容創作等多個行業，充分展現出AI的應用潛力。這種良好的用戶體驗和豐富的應用場景，讓DeepSeek-R1在市場上更具競爭力，吸引更多用戶和企業選擇使用它。
+# 启动命令
+ollama serve
+```  
 
-## 參考鏈接
+### 4. 進階應用：可視化與 API 集成  
+- **Open Web UI 部署**：  
+  ```bash  
+  docker run -d -p 3000:8080 --restart always ghcr.io/open-webui/open-webui:main  
+  ```  
+  訪問 `http://localhost:3000` 即可使用類 ChatGPT 的交互界面。  
 
-- [DeepSeek-R1 GitHub Repository](https://github.com/deepseek-ai/DeepSeek-R1) [^10^]
-- [DeepSeek-R1 技術報告](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/DeepSeek_R1.pdf) [^11^]
-- [DeepSeek-R1 - 高性能AI推理模型](https://ai-bot.cn/deepseek-r1/) [^12^]
-- [DeepSeek-R1 官方網站](https://www.deepseekr1.org/cn) [^13^]
+- **Python API 調用**：  
+  ```python  
+  import openai  
+  client = openai.Client(base_url="http://localhost:11434/v1", api_key="ollama")  
+  response = client.chat.completions.create(  
+    model="deepseek-r1:8b",  
+    messages=[{"role": "user", "content": "寫一個Python貪吃蛇遊戲"}]  
+  )  
+  ```  
+  需注意：複雜任務（如遊戲開發）可能耗時數分鐘，建議調整 `temperature` 參數平衡創造力與效率。  
+
+---
+
+## DeepSeek R1 Zero 與 R1 的技術差異  
+| 特性                | DeepSeek R1 Zero         | DeepSeek R1              |  
+|---------------------|--------------------------|--------------------------|  
+| **訓練方法**         | 純強化學習（無監督數據） | RL + 監督微調 + RLHF     |  
+| **可讀性**           | 輸出邏輯鏈較混亂         | 步驟清晰，附帶 `<think>` 標籤解析 |  
+| **多語言支持**       | 僅英文優化               | 中英文混合處理增強       |  
+| **安全過濾**         | 無                       | 通過 RLHF 抑制有害輸出   |  
+| **適用場景**         | 研究用途                 | 生產環境                 |  
+
+**關鍵結論**：R1 在 R1 Zero 基礎上，通過引入 CoT 數據微調和第二輪 RL 訓練，解決了邏輯斷裂與安全性問題，更適合實際應用。  
+
+---
+
+## 部署問題排查與優化技巧  
+1. **顯存不足**：  
+   - 啟用 CPU-GPU 混合推理：`OLLAMA_NUM_GPU=1`（僅限 Linux）。  
+   - 使用低精度模式：啟動時添加 `--precision fp16` 參數。  
+
+2. **下載超時**：  
+   - 更換國內鏡像源：`OLLAMA_HOST=鏡像地址 ollama run...` 。  
+
+3. **生成速度慢**：  
+   - 限制輸出長度：`ollama run --max-tokens 300` 。  
+
