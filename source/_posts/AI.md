@@ -1,5 +1,5 @@
 ---
-title: DeepSeek-R1為什麼會成功
+title: 在本地部署 DeepSeek R1
 date: 2024/01/27
 comments: true
 categories: AI
