@@ -278,3 +278,6 @@ DeepSeek 團隊成功打造出 DeepSeek R1 這個厲害的 AI 模型後, 他們�
 總結來說, DeepSeek R1 的訓練過程就像是一個精心設計的課程, 透過不同的方法和技巧, 讓 AI 模型一步一步地學會推理, 並且變得更安全、更有用。希望這篇文章可以幫助你更了解 DeepSeek R1 這個厲害的 AI 模型!
 
 **希望這篇文章能夠幫助你了解 DeepSeek R1 的訓練過程, 讓你對 AI 的發展有更深入的認識!**
+
+#參考
+https://levelup.gitconnected.com/drawing-deepseek-r1-architecture-and-training-process-from-scratch-72043da33955
