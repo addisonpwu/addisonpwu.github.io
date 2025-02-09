@@ -1059,11 +1059,11 @@ home_top:
       shadow: var(--anzhiyu-shadow-red)
       class: red
       icon: anzhiyu-icon-fire
-    # - name: 金融
-    #   path: /categories/金融/
-    #   shadow: var(--anzhiyu-shadow-green)
-    #   class: green
-    #   icon: anzhiyu-icon-book
+    - name: AI
+      path: /categories/AI/
+      shadow: var(--anzhiyu-shadow-green)
+      class: green
+      icon: anzhiyu-icon-book
   default_descr: 再怎么看我也不知道怎么描述它的啦！
   swiper:
     enable: false

@@ -1,7 +1,7 @@
 ---
-title: 相對強弱指標 (RSI)
+title: 股票技術指標1 - RSI
 date: 2025-02-08 08:00:00
-tags: [股票, RSI, 技術指標]
+tags: [股票, RSI]
 categories: [金融]
 ---
 
